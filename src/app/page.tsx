@@ -1,19 +1,50 @@
 'use client'
-import { useState, useEffect } from 'react';
-import CodeInput from '@/components/CodeInput';
-import Dropdown from '@/components/Dropdown';
-import FileUpload from '@/components/FileUpload';
-import OutputDisplay from '@/components/OutputDisplay';
-import HistoryPanel from '@/components/HistoryPanel';
+import React, { useState, useEffect } from 'react';
+import { AiOutlineSearch } from 'react-icons/ai';
+import Chat from './chat/page';
 
-const LANGUAGES = ['Python', 'JavaScript', 'Java'];
-const FORMATS = ['Inline Comments', 'Docstrings', 'Summary'];
+const HistorySidebar = ({
+  historyData,
+  onSelect,
+}: {
+  historyData: string[];
+  onSelect: (entry: string) => void;
+}) => {
+  const [searchQuery, setSearchQuery] = useState('');
 
-export default function Home() {
+  const filteredHistory = historyData.filter((entry) =>
+    entry.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+  return (
+    <div className="w-full md:w-1/4 border-r border-white p-4 flex flex-col">
+      <div className="mb-4 relative">
+        <input
+          type="text"
+          placeholder="Search history..."
+          className="w-full pt-[10px] p-2 pl-10 border border-white rounded focus:outline-none focus:ring-2 focus:ring-[#2a7be4] text-white bg-transparent"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+        />
+        <AiOutlineSearch className="absolute left-3 top-2 text-white mt-2" />
+      </div>
+      <div className="space-y-4 overflow-y-auto">
+        {filteredHistory.map((entry, index) => (
+          <div
+            key={index}
+            onClick={() => onSelect(entry)}
+            className="bg-blue-600 text-white rounded hover:bg-blue-700 cursor-pointer p-2"
+          >
+            {entry.length > 100 ? entry.slice(0, 100) + '...' : entry}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+const Home = () => {
   const [code, setCode] = useState('');
-  const [output, setOutput] = useState('');
-  const [language, setLanguage] = useState('Python');
-  const [format, setFormat] = useState('Docstrings');
   const [history, setHistory] = useState<string[]>([]);
 
   useEffect(() => {
@@ -21,38 +52,15 @@ export default function Home() {
     if (saved) setHistory(JSON.parse(saved));
   }, []);
 
-  const handleGenerate = async () => {
-    const payload = { code, language, format };
-    const res = await fetch('/api/generate', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload),
-    });
-    const data = await res.json();
-    setOutput(data.result);
-    const updated = [code, ...history.slice(0, 9)];
-    setHistory(updated);
-    localStorage.setItem('docHistory', JSON.stringify(updated));
-  };
-
   return (
-    <main className="max-w-3xl mx-auto p-6">
-      <h1 className="text-3xl font-bold mb-6">CodeDoc Genie</h1>
+    <div className="flex flex-col bg-black md:flex-row h-screen">
+      <HistorySidebar historyData={history} onSelect={setCode} />
 
-      <FileUpload onUpload={setCode} />
-      <CodeInput value={code} onChange={setCode} />
-      <Dropdown label="Language" options={LANGUAGES} value={language} onChange={setLanguage} />
-      <Dropdown label="Documentation Style" options={FORMATS} value={format} onChange={setFormat} />
-
-      <button
-        onClick={handleGenerate}
-        className="mt-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
-      >
-        Generate Documentation
-      </button>
-
-      <OutputDisplay output={output} />
-      <HistoryPanel history={history} onSelect={setCode} />
-    </main>
+      <div className="flex-1 p-6 overflow-y-auto">
+        <Chat code={code} setCode={setCode} updateHistory={setHistory} />
+      </div>
+    </div>
   );
-}
+};
+
+export default Home;
