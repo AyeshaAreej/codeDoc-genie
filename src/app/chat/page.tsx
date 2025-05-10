@@ -1,61 +1,65 @@
-'use client'
+'use client';
+
 import { useState } from 'react';
 import CodeInput from '@/components/CodeInput';
 import Dropdown from '@/components/Dropdown';
-import FileUpload from '@/components/FileUpload';
 import OutputDisplay from '@/components/OutputDisplay';
 
-const LANGUAGES = ['Python', 'JavaScript', 'Java'];
-const FORMATS = ['Inline Comments', 'Docstrings', 'Summary'];
+const docStyles = ["Inline Comments", "Docstrings", "Code Summary"];
 
-export default function Home({
-  code,
-  setCode,
-  updateHistory,
-}: {
-  code: string;
-  setCode: (code: string) => void;
-  updateHistory: (history: string[]) => void;
-}) {
-  const [output, setOutput] = useState('');
-  const [language, setLanguage] = useState('Python');
-  const [format, setFormat] = useState('Docstrings');
+export default function ChatPage() {
+  const [code, setCode] = useState('');
+  const [docStyle, setDocStyle] = useState('Inline Comments');
+  const [outputText, setOutputText] = useState('');
+  const [loading, setLoading] = useState(false);
 
-  const handleGenerate = async () => {
-    const payload = { code, language, format };
-    const res = await fetch('/api/generate', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload),
-    });
-    const data = await res.json();
-    setOutput(data.result);
+  const handleGenerateDocumentation = async () => {
+    setLoading(true);
+    try {
+      const response = await fetch('/api/generateDocumentation', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ code, docStyle }),
+      });
 
-    const saved = localStorage.getItem('docHistory');
-    const prev = saved ? JSON.parse(saved) : [];
-    const updated = [code, ...prev.filter((c: string) => c !== code)].slice(0, 10);
+      const data = await response.json();
+      console.log("Frontend received:", data);
+      console.log("Output Text:", data.result.result.outputText);  // Correctly access the nested outputText
 
-    localStorage.setItem('docHistory', JSON.stringify(updated));
-    updateHistory(updated);
+      if (response.ok) {
+        setOutputText(data.result.result.outputText);  // Set the nested outputText to the state
+      } else {
+        alert(data.error || 'Failed to generate documentation');
+      }
+    } catch (error: any) {
+      alert('Error: ' + error.message || 'Failed to generate documentation');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
-    <main className="w-full max-w-full mx-auto p-6">
-      <h1 className="text-3xl font-bold text-white mb-6">CodeDoc Genie</h1>
-
-      <FileUpload onUpload={setCode} />
+    <div className="p-6">
+      <h1 className="text-2xl font-bold mb-4">Generate Code Documentation</h1>
       <CodeInput value={code} onChange={setCode} />
-      <Dropdown label="Language" options={LANGUAGES} value={language} onChange={setLanguage} />
-      <Dropdown label="Documentation Style" options={FORMATS} value={format} onChange={setFormat} />
-
+      <Dropdown
+        label="Select Documentation Style"
+        options={docStyles}
+        value={docStyle}
+        onChange={setDocStyle}
+      />
       <button
-        onClick={handleGenerate}
-        className="mt-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+        onClick={handleGenerateDocumentation}
+        className="bg-blue-500 text-white py-2 px-4 rounded mt-4"
+        disabled={loading}
       >
-        Generate Documentation
+        {loading ? 'Generating...' : 'Generate Documentation'}
       </button>
 
-      <OutputDisplay output={output} />
-    </main>
+      {/* Display outputText only when it's not empty */}
+      {outputText && <OutputDisplay outputText={outputText} />}
+    </div>
   );
 }
