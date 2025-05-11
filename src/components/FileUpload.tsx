@@ -12,19 +12,21 @@ export default function FileUpload({ onUpload }: Props) {
   };
 
   return (
-    <div className="mb-6">
+    <div >
       <input
         type="file"
-        accept=".js,.py,.java"
+        accept=".js,.py,.tsx,.ts,.ipynb..java"
         onChange={handleFile}
         id="file-upload"
         className="hidden"
       />
       <label
         htmlFor="file-upload"
-        className="block w-full text-center bg-blue-600 text-white py-3 px-6 rounded-md cursor-pointer hover:bg-blue-700 transition duration-200"
+        className="customButton block w-full text-center py-3 px-6 r cursor-pointer  text-slate-700 rounded-md hover:bg-slate-300 transition text-sm font-medium  items-center shadow-sm"
       >
-        Choose File
+
+
+        Select File
       </label>
     </div>
   );

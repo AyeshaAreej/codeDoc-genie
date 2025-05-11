@@ -1,3 +1,5 @@
+import React from 'react';
+
 type Props = {
   label: string;
   options: string[];
@@ -7,8 +9,8 @@ type Props = {
 
 export default function Dropdown({ label, options, value, onChange }: Props) {
   return (
-    <div className="mb-4">
-      <label className="block text-lg font-semibold text-black mb-2"> {/* Made text larger */}
+    <div >
+      <label className=" block text-lg font-semibold text-black mb-2"> {/* Made text larger */}
         {label}
       </label>
       <select

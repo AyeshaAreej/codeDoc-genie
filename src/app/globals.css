@@ -57,6 +57,17 @@ a:hover {
 
 
 button {
+  display: flex;
+  padding: 12px 24px;
+  background: linear-gradient(145deg,  #4e91c1, #134574); 
+  color: white;
+  font-size: 16px;
+  border-radius: 8px; 
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.2s ease;
+  box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1); 
+}
+.customButton {
   display: inline-block;
   padding: 12px 24px;
   background: linear-gradient(145deg,  #4e91c1, #134574); 
@@ -66,6 +77,16 @@ button {
   cursor: pointer;
   transition: background 0.3s ease, transform 0.2s ease;
   box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1); 
+}
+select{
+    display: inline-block !important;
+    background: linear-gradient(145deg, #4e91c1, #134574) !important;
+    color: white;
+    font-size: 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.3s ease, transform 0.2s ease;
+    box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 button:hover {
@@ -112,7 +133,7 @@ input[type="file"] {
   display: none;
 }
 
-select {
+/* .custom-select {
   width: 220px;  
   padding: 10px 12px;  
   font-size: 14px;  
@@ -120,7 +141,7 @@ select {
   background-color: #f9fafb;  
   border: 1px solid #e2e8f0;  
   transition: background-color 0.3s ease, border-color 0.3s ease;  
-}
+} */
 
 select:focus {
   outline: none;

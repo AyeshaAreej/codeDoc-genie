@@ -9,7 +9,7 @@ export default function HistoryPanel({ history, onSelect }: Props) {
       <h3 className="font-semibold mb-2">History</h3>
       <ul className="space-y-1">
         {history.map((item, i) => (
-          <li key={i}>
+         <li key={i}>
             <button
               onClick={() => onSelect(item)}
               className="text-blue-600 underline hover:text-blue-800"

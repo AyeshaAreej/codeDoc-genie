@@ -1,40 +1,39 @@
 import React, { useState } from 'react';
+import { v4 as uuidv4 } from 'uuid';
 
-type Props = {
-  output: string;
-};
 
-export default function OutputDisplay({ output }: Props) {
+const OutputDisplay =({ outputText }: { outputText: string }) =>{
   const [isCopied, setIsCopied] = useState(false);
-
+console.log("outputText",outputText)
   const copyToClipboard = async () => {
     try {
-      await navigator.clipboard.writeText(output); // Copy content to clipboard
+      await navigator.clipboard.writeText(outputText);
       setIsCopied(true);
-      setTimeout(() => setIsCopied(false), 2000); // Reset after 2 seconds
+      setTimeout(() => setIsCopied(false), 2000); 
     } catch (err) {
       console.error('Failed to copy: ', err);
     }
   };
-
-  const saveToFile = () => {
-    const blob = new Blob([output], { type: 'text/plain' });
+ const handleSave = () => {
+    const filename = `doc_output_${uuidv4().slice(0, 8)}.txt`;
+    const blob = new Blob([outputText], { type: 'text/plain' });
     const link = document.createElement('a');
     link.href = URL.createObjectURL(blob);
-    link.download = 'generated_documentation.txt'; // The filename
-    link.click(); // Simulate click to trigger download
+    link.download = filename;
+    link.click();
   };
 
+ 
   return (
     <div className="mt-6 p-4 border rounded-md bg-gray-50 shadow-sm">
       <div className="h-64 overflow-auto p-2">
-        <pre className="text-sm whitespace-pre-wrap">{output}</pre>
+       <pre className="text-sm whitespace-pre-wrap text-black">{outputText}</pre>
       </div>
 
       {/* Buttons */}
-      <div className="mt-4 flex space-x-4">
+      {/* <div className="mt-4 flex space-x-4">
         <button
-          onClick={saveToFile}
+          onClick={handleSave}
           className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700"
         >
           Save to File
@@ -45,7 +44,8 @@ export default function OutputDisplay({ output }: Props) {
         >
           {isCopied ? 'Copied!' : 'Copy to Clipboard'}
         </button>
-      </div>
+      </div> */}
     </div>
   );
 }
+export default OutputDisplay;
