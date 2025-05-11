@@ -1,26 +1,129 @@
+/* globals.css */
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --background: #f9fafb; 
+  --foreground: #171717;  
+  --primary-color: #3182ce; 
+  --secondary-color: #2d3748; 
+  --font-sans: 'Poppins', sans-serif;
+  --font-mono: 'Courier New', monospace;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --background: #1a202c;  
+    --foreground: #e2e8f0;  
+    --primary-color: #63b3ed; 
+    --secondary-color: #2d3748; 
   }
 }
 
 body {
+  background-color: #ffffff; 
+  color: #171717; 
+  font-family: 'Poppins', sans-serif; 
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+}
+
+
+
+body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans), Arial, Helvetica, sans-serif;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  line-height: 1.6; 
+  margin: 0; 
+}
+
+
+a {
+  color: var(--primary-color);
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+a:hover {
+  color: var(--secondary-color); 
+}
+
+
+button {
+  display: inline-block;
+  padding: 12px 24px;
+  background: linear-gradient(145deg,  #4e91c1, #134574); 
+  color: white;
+  font-size: 16px;
+  border-radius: 8px; 
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.2s ease;
+  box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1); 
+}
+
+button:hover {
+  background: linear-gradient(145deg, #3182ce, #3e85b8); 
+  transform: scale(1.05); 
+}
+
+
+input:focus, button:focus {
+  outline: none;
+  box-shadow: 0 0 8px rgba(0, 123, 255, 0.5); 
+ text-align: center;
+}
+
+* {
+  transition: all 0.3s ease;
+}
+
+.container {
+  padding: 20px;
+  margin: 0 auto;
+  max-width: 1200px;
+}
+
+.file-upload-btn {
+  display: inline-block;
+  padding: 12px 24px;
+  background: linear-gradient(145deg,  #4e91c1, #134574); 
+  color: white;
+  font-size: 16px;
+  border-radius: 8px; 
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.2s ease;
+  box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1); 
+}
+
+.file-upload-btn:hover {
+  background: linear-gradient(145deg, #3182ce,#3e85b8); 
+  transform: scale(1.05); 
+}
+
+
+input[type="file"] {
+  display: none;
+}
+
+select {
+  width: 220px;  
+  padding: 10px 12px;  
+  font-size: 14px;  
+  border-radius: 8px; 
+  background-color: #f9fafb;  
+  border: 1px solid #e2e8f0;  
+  transition: background-color 0.3s ease, border-color 0.3s ease;  
+}
+
+select:focus {
+  outline: none;
+  border-color: #3182ce;  
+  box-shadow: 0 0 8px rgba(0, 123, 255, 0.3); 
 }
