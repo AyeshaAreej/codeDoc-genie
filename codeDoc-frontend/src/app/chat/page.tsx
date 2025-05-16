@@ -35,11 +35,33 @@ export default function ChatPage() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [loading, setLoading] = useState(false);
   const [username, setUsername] = useState<string | null>(null);
-  useEffect(() => {
-    setUserName(localStorage.getItem('username') || 'User');
-  }, []);
+
 
   const { userId, setUserId } = useUser();
+  useEffect(() => {
+    setUserName(localStorage.getItem('username') || 'User');
+      const fetchHistory = async () => {
+      if (!userId) return;
+
+    try {
+      const res = await axios.get(`http://localhost:5000/api/getHistory`, {
+        params: { userId },
+        withCredentials: true,  
+      });
+
+      console.log('Fetched history:', res.data);
+      if (res.data && Array.isArray(res.data)) {
+        const titles = res.data.map((item: any) => item.title || 'Untitled');
+        setRecentChats(titles);
+      }
+    } catch (error) {
+      console.error('Failed to fetch chat history:', error);
+    }
+  };
+
+  fetchHistory();
+  }, [outputText, userId]);
+
   const updateHistory = (history: string[]) => {
     setRecentChats(history);
   };
@@ -72,6 +94,7 @@ export default function ChatPage() {
         }
         );
       const generatedDoc = response?.data?.result?.outputText;
+      console.log('Generated Documentation:', typeof generatedDoc); 
       const dynamicTitle= response?.data?.result?.title
       setOutputText(generatedDoc);
       setTitle(dynamicTitle)
@@ -86,7 +109,7 @@ export default function ChatPage() {
           title: response?.data?.result?.title || `Generated Doc - ${new Date().toLocaleString()}`,
           code,
           docStyle,
-          documentation: "Generated Document", // Convert to template literal
+          documentation: generatedDoc, // Convert to template literal
           
         },
         { withCredentials: true }
@@ -246,7 +269,7 @@ export default function ChatPage() {
               <div className="bg-white rounded-none shadow-none p-8 flex-1 flex flex-col justify-start items-center min-h-0 mt-8">
                 <div className="flex justify-between items-center mb-4 w-full max-w-2xl">
                   <h2 className="text-xl font-semibold text-gray-800">Generated Documentation</h2>
-                  <p className='text-black'>{title}</p>
+                  <p className='text-black'>Title: {title}</p>
                 </div>
                 <OutputDisplay outputText={outputText} />
                 <div className="flex justify-end items-end mt-3.5 ml-[350px] space-x-2">

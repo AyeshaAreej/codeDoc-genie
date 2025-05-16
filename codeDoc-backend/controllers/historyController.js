@@ -28,10 +28,16 @@ exports.saveHistory = async (req, res) => {
 
 exports.getHistory = async (req, res) => {
   try {
-    const userId = req.user.userId;
+    const userId = req.query.userId; // <-- from query string
+    console.log('User ID:', userId);
+
+    if (!userId) {
+      return res.status(400).json({ error: 'Missing userId in query parameters' });
+    }
+
     const history = await History.find({ userId }).sort({ createdAt: -1 });
     res.json(history);
   } catch (err) {
     res.status(500).json({ error: 'Failed to fetch history' });
-  }
+  } 
 };
