@@ -29,6 +29,7 @@ export default function ChatPage() {
   const [code, setCode] = useState('');
   const [docStyle, setDocStyle] = useState('Inline Comments');
   const [outputText, setOutputText] = useState<string>(''); 
+  const [title, setTitle] = useState<string>(''); 
   const [recentChats, setRecentChats] = useState<string[]>([]);
   const [userName, setUserName] = useState('User');
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
@@ -70,20 +71,19 @@ export default function ChatPage() {
           },
         }
         );
-
       const generatedDoc = response?.data?.result?.outputText;
-
+      const dynamicTitle= response?.data?.result?.title
       setOutputText(generatedDoc);
+      setTitle(dynamicTitle)
 
-
-      console.log('Generated Documentation:', generatedDoc);
+      // console.log('Generated Documentation:', generatedDoc);
 
       // Save documentation to DB <inline></inline>
       const save_response = await axios.post(
         'http://localhost:5000/api/saveHistory',
         {
           userId, // from context
-          title: `Generated Doc - ${new Date().toLocaleString()}`,
+          title: response?.data?.result?.title || `Generated Doc - ${new Date().toLocaleString()}`,
           code,
           docStyle,
           documentation: "Generated Document", // Convert to template literal
@@ -246,7 +246,7 @@ export default function ChatPage() {
               <div className="bg-white rounded-none shadow-none p-8 flex-1 flex flex-col justify-start items-center min-h-0 mt-8">
                 <div className="flex justify-between items-center mb-4 w-full max-w-2xl">
                   <h2 className="text-xl font-semibold text-gray-800">Generated Documentation</h2>
-                  
+                  <p className='text-black'>{title}</p>
                 </div>
                 <OutputDisplay outputText={outputText} />
                 <div className="flex justify-end items-end mt-3.5 ml-[350px] space-x-2">

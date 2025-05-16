@@ -3,7 +3,7 @@ const History = require('../models/History');
 exports.saveHistory = async (req, res) => {
 
   try {
-    const { userId, title, code, docStyle, documentation } = req.body;
+    const { userId,  code, docStyle, documentation,title, } = req.body;
     
     console.log(typeof userId);
     console.log(typeof title);

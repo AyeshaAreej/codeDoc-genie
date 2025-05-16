@@ -1,12 +1,10 @@
-// src/pages/api/generateDocumentation.ts
-
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 const LAMBDA_URL = "https://8q855mjd36.execute-api.us-west-2.amazonaws.com/dev/generate-text";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const { code, docStyle } = req.body;
-  console.log("called")
+
   if (!code || !docStyle) {
     return res.status(400).json({ error: "Missing code or documentation style." });
   }
@@ -23,11 +21,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     const result = await response.json();
-    console.log("Lambda response:", result); // ADD THIS LINE
+    const outputText = result.result.outputText; // Documentation result
+    const title = result.result.title; // Title result
 
-    res.status(200).json({ result: result });
+    res.status(200).json({ result: outputText, title }); // Return both documentation and title
   } catch (error) {
     console.error("Error calling Lambda:", error);
     res.status(500).json({ error: "Server error" });
   }
 }
+
+
