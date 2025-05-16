@@ -4,7 +4,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 const OutputDisplay =({ outputText }: { outputText: string }) =>{
   const [isCopied, setIsCopied] = useState(false);
-console.log("outputText",outputText)
+// console.log("outputText",outputText)
   const copyToClipboard = async () => {
     try {
       await navigator.clipboard.writeText(outputText);
